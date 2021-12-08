@@ -1,0 +1,114 @@
+image: mcr.microsoft.com/dotnet/core/aspnet:3.1-bionic
+
+stages:
+  - prepare
+  - build_carol
+  - build_sara
+  - build_julia
+  - build_brenda
+  - trigger
+  - deploy_carol
+  - deploy_sara
+  - deploy_julia
+  - deploy_brenda
+
+setup:Production:
+  stage: prepare
+  environment:
+    name: development
+  script:
+    - mkdir tmp
+    - export random=$((1 + RANDOM % 1000000))
+    - echo $ORACLE_REGISTRY_IMAGE:carol_$random > tmp/image_carol
+    - echo $ORACLE_REGISTRY_IMAGE:sara_$random > tmp/image_sara
+    - echo $ORACLE_REGISTRY_IMAGE:julia_$random > tmp/image_julia
+    - echo $ORACLE_REGISTRY_IMAGE:brenda_$random > tmp/image_brenda
+    - echo $CI_ENVIRONMENT_SLUG > tmp/environment
+  artifacts:
+    paths:
+      - tmp/
+  only:
+    - master
+
+build_carol:
+  stage: build_carol
+  script:
+    - export IMAGE_CAROL=$(cat tmp/image_carol)
+    - docker login https://us-ashburn-1.ocir.io -u grubz6bblcy9/gitlab-cicd -p '[de3}(O7#PTlMyFL{O:U'
+    - cd api
+    - docker build -f ./Carol.Api/Dockerfile --force-rm --pull -t $IMAGE_CAROL ./
+    - docker push $IMAGE_CAROL
+
+build_sara:
+  stage: build_sara
+  script:
+    - export IMAGE_SARA=$(cat tmp/image_sara)
+    - docker login https://us-ashburn-1.ocir.io -u grubz6bblcy9/gitlab-cicd -p '[de3}(O7#PTlMyFL{O:U' 
+    - cd api
+    - docker build -f ./Sara.Api/Dockerfile --force-rm --pull -t $IMAGE_SARA ./
+    - docker push $IMAGE_SARA
+
+build_julia:
+  stage: build_julia
+  script:
+    - export IMAGE_JULIA=$(cat tmp/image_julia)
+    - docker login https://us-ashburn-1.ocir.io -u grubz6bblcy9/gitlab-cicd -p '[de3}(O7#PTlMyFL{O:U' 
+    - cd api
+    - docker build -f ./Julia.Api/Dockerfile --force-rm --pull -t $IMAGE_JULIA ./
+    - docker push $IMAGE_JULIA
+
+build_brenda:
+  stage: build_brenda
+  script:
+    - export IMAGE_BRENDA=$(cat tmp/image_brenda)
+    - docker login https://us-ashburn-1.ocir.io -u grubz6bblcy9/gitlab-cicd -p '[de3}(O7#PTlMyFL{O:U' 
+    - cd api
+    - docker build -f ./Brenda.Web/Dockerfile --force-rm --pull -t $IMAGE_BRENDA ./
+    - docker push $IMAGE_BRENDA
+
+TriggerConfigMap:Production:
+  stage: trigger
+  environment:
+    name: development
+  script:
+    - export ENV=$(cat tmp/environment)
+    - kubectl config use-context context-c4tgobqguzd
+    - kubectl apply -f devops/configmap-$ENV.yml
+  only:
+    - master
+
+deploy_carol:
+  stage: deploy_carol
+  tags:
+  script:
+    - export IMAGE=$(cat tmp/image_carol)
+    - sed s,#image#,$IMAGE,g devops/kubernetes_carol.yml > devops/kubernetes_carol.yml.tmp && mv devops/kubernetes_carol.yml.tmp devops/kubernetes_carol.yml
+    - kubectl config use-context context-c4tgobqguzd
+    - kubectl apply -f devops/kubernetes_carol.yml
+
+deploy_sara:
+  stage: deploy_sara
+  tags:
+  script:
+    - export IMAGE=$(cat tmp/image_sara)
+    - sed s,#image#,$IMAGE,g devops/kubernetes_sara.yml > devops/kubernetes_sara.yml.tmp && mv devops/kubernetes_sara.yml.tmp devops/kubernetes_sara.yml
+    - kubectl config use-context context-c4tgobqguzd
+    - kubectl apply -f devops/kubernetes_sara.yml
+
+deploy_julia:
+  stage: deploy_julia
+  tags:
+  script:
+    - export IMAGE=$(cat tmp/image_julia)
+    - sed s,#image#,$IMAGE,g devops/kubernetes_julia.yml > devops/kubernetes_julia.yml.tmp && mv devops/kubernetes_julia.yml.tmp devops/kubernetes_julia.yml
+    - kubectl config use-context context-c4tgobqguzd
+    - kubectl apply -f devops/kubernetes_julia.yml
+
+deploy_brenda:
+  stage: deploy_brenda
+  tags:
+  script:
+    - export IMAGE=$(cat tmp/image_brenda)
+    - sed s,#image#,$IMAGE,g devops/kubernetes_brenda.yml > devops/kubernetes_brenda.yml.tmp && mv devops/kubernetes_brenda.yml.tmp devops/kubernetes_brenda.yml
+    - kubectl config use-context context-c4tgobqguzd
+    - kubectl apply -f devops/kubernetes_brenda.yml

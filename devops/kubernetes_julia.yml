@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: julia-test
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+       app: julia-test
+  template:
+    metadata:
+      labels:
+        app: julia-test
+    spec:
+      containers:
+        - name: julia-test
+          image: #image#
+          ports:
+            - containerPort: 80
+          env:
+          - name: ASPNETCORE_ENVIRONMENT
+            value: "Production"
+          envFrom:
+          - configMapRef:
+              name: brenda-test-configmap          
+      imagePullSecrets:
+      - name: oracleregistry
+
+---
+apiVersion: v1
+kind: Service
+metadata:       
+  name: julia-test
+  annotations:
+    service.beta.kubernetes.io/oci-load-balancer-subnet1: "ocid1.subnet.oc1.iad.aaaaaaaax5kgmkqptxxxr7ndxyntxlhxyldag4pabbfhseofnwes5xwfkiyq"
+    service.beta.kubernetes.io/oci-load-balancer-shape: 10Mbps
+  labels:
+    app: julia-test
+spec:
+  selector:
+    app: julia-test
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http
+            
+            
+
+
+

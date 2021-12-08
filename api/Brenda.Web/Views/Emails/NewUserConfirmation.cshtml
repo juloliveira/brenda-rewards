@@ -1,0 +1,13 @@
+﻿@model Brenda.Contracts.Emails.NewUserConfirmation
+@{
+    Layout = null;
+}
+<html>
+<head>
+    <title>Bem-vindo à Brenda</title>
+</head>
+<body>
+    <h3>Bem-vindo @Model.Name,</h3>
+    <p>Para ativar sua conta e criar sua senha de acesso <a href="@Model.CallbackUrl" target="_blank">clique aqui</a></p>
+</body>
+</html>

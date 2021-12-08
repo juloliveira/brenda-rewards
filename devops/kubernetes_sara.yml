@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sara-test
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+       app: sara-test
+  template:
+    metadata:
+      labels:
+        app: sara-test
+    spec:
+      containers:
+        - name: sara-test
+          image: #image#
+          ports:
+            - containerPort: 80
+          env:
+          - name: ASPNETCORE_ENVIRONMENT
+            value: "Production"
+          - name: GOOGLE_APPLICATION_CREDENTIALS
+            value: "/app/Files/brenda-wallet-firebase.json"
+          envFrom:
+          - configMapRef:
+              name: brenda-test-configmap          
+      imagePullSecrets:
+      - name: oracleregistry
+
+---
+apiVersion: v1
+kind: Service
+metadata:       
+  name: sara-test
+  annotations:
+    service.beta.kubernetes.io/oci-load-balancer-subnet1: "ocid1.subnet.oc1.iad.aaaaaaaax5kgmkqptxxxr7ndxyntxlhxyldag4pabbfhseofnwes5xwfkiyq"
+    service.beta.kubernetes.io/oci-load-balancer-shape: 10Mbps
+  labels:
+    app: sara-test
+spec:
+  selector:
+    app: sara-test
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http

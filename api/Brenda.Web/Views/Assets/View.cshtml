@@ -1,0 +1,260 @@
+﻿@model Brenda.Contracts.V1.Requests.AssetForm
+@{
+    ViewBag.Subtitle = "Asset: " + Model.Title;
+}
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card card-custom gutter-b example example-compact">
+                    <div class="card-header">
+                        <h3 class="card-title">Edição de Asset</h3>
+                    </div>
+                    <form asp-controller="asset" asp-action="edit" method="post" class="form" novalidate="novalidate">
+                        @Html.HiddenFor(x => x.Id)
+                        <partial name="_Form" />
+                    </form>
+                </div>
+            </div>
+            @if (Brenda.Core.Identifiers.Actions.IsVideo(Model.ActionId ?? Guid.Empty) && !string.IsNullOrEmpty(Model.Resource))
+            {
+                <div class="col-lg-12">
+                    <div class="card card-custom gutter-b example example-compact">
+                        <div class="card-header">
+                            <h3 class="card-title">Preview de Video</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <video id="my-video"
+                                       class="video-js"
+                                       controls
+                                       preload="auto"
+                                       width="600"
+                                       @*height="264"*@
+                                       @*poster="MY_VIDEO_POSTER.jpg"*@
+                                       @*data-setup="{}"*@>
+                                    <source src="@Model.Resource" type="video/mp4" />
+                                    <p class="vjs-no-js">
+                                        <a href="https://videojs.com/html5-video-support/" target="_blank"></a>
+                                    </p>
+                                </video>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <partial name="_Defs" />
+    </div>
+</div>
+
+@section head {
+    <link href="~/assets/plugins/custom/uppy/uppy.bundle.css" rel="stylesheet" />
+    <link href="https://vjs.zencdn.net/7.8.3/video-js.css" rel="stylesheet" />
+
+}
+
+@section scripts {
+
+    @if (Brenda.Core.Identifiers.Actions.IsVideo(Model.ActionId ?? Guid.Empty))
+    {
+        <script src="https://transloadit.edgly.net/releases/uppy/v1.19.0/uppy.min.js"></script>
+        <script src="https://transloadit.edgly.net/releases/uppy/locales/v1.16.1/pt_BR.min.js"></script>
+        <script src="https://vjs.zencdn.net/7.8.3/video.js"></script>
+        <script>
+            $(function () {
+
+                var options = {
+                    target: '#kt_uppy_2',
+                    proudlyDisplayPoweredByUppy: true,
+                    inline: true,
+                    replaceTargetContent: true,
+                    showProgressDetails: true,
+                    note: 'Envie um video',
+                    height: 170,
+                    browserBackButtonClose: true
+                }
+
+                var uppy = Uppy.Core({
+                    autoProceed: true,
+                    restrictions: {
+                        maxNumberOfFiles: 1,
+                        minNumberOfFiles: 1,
+                        allowedFileTypes: ['.mp4']
+                    },
+                    locale: Uppy.locales.pt_BR
+                });
+
+                uppy.use(Uppy.Dashboard, options);
+                uppy.use(Uppy.AwsS3, {
+                    getUploadParameters(file) {
+                        return fetch('/asset/storage', {
+                            method: 'PUT',
+                            headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                filename: document.getElementById("Id").value + ".mp4",
+                                type: file.type
+                            })
+                        }).then((response) => {
+                            // Parse the JSON response.
+                            return response.json()
+                        }).then((data) => {
+                            // Return an object in the correct shape.
+                            return {
+                                method: data.method,
+                                url: data.url,
+                                fields: data.fields,
+                                headers: data.headers
+                            }
+                        });
+                    },
+                });
+
+                uppy.on('upload-success', (file, response) => {
+                    response.status // HTTP status code
+                    response.body   // extracted response data
+                    console.log(response);
+
+                    if (response.status == 200) {
+                        $.ajax({
+                            method: 'PUT',
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            url: '/asset/' + document.getElementById('Id').value + '/resource',
+                            data: JSON.stringify({ resource: response.uploadURL }),
+                            success: function (result) {
+                                alert('ok');
+                            }
+                        });
+                    }
+                });
+
+            });
+        </script>
+    }
+    else if (Brenda.Core.Identifiers.Actions.IsQuiz(Model.ActionId ?? Guid.Empty))
+    {
+        <script>
+            $(function () {
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": true,
+                    "positionClass": "toast-top-center",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                };
+
+                $('#a-add-question').click(function (e) {
+                    var assetId = $('input[name=Id]').val();
+                    $.ajax({
+                        url: `/asset/${assetId}/question`,
+                        method: 'put',
+                        success: function (e) {
+                            var question_template = $('#tmpl-question').html()
+                            var handlebars = Handlebars.compile(question_template);
+                            $('#d-quiz').append(handlebars(e.result));
+
+                            $(`#d-${e.result.id}`).find('.b-add-option').on('click', addOption);
+                            $(`#d-${e.result.id}`).find('.quiz').on('blur', saveQuiz);
+                        },
+                        error: function (e) {
+                            toastr.error(e.responseJSON.title);
+                        }
+
+                    });
+                });
+
+                $('.b-add-option').on('click', addOption);
+                $('.quiz').on('blur', saveQuiz);
+                $('.b-remove-option').on('click', removeOption);
+            });
+
+            function removeOption(event) {
+                var target = $(event.currentTarget);
+                var assetId = $('input[name=Id]').val();
+                var optionId = target.data('id');
+                var questionId = target.parents('.question').data('id');
+                $.ajax({
+                    url: `/asset/${assetId}/question/${questionId}/option/${optionId}/remove`,
+                    method: 'delete',
+                    success: function (e) {
+                        toastr.info("Opção removida com sucesso");
+                        target.parents('.option_').remove();
+                    },
+                    error: function (e) {
+                        toastr.error("Erro ao remover opção de resposta");
+                    }
+
+                });
+            }
+
+            function saveQuiz(event) {
+                var target = $(event.currentTarget);
+                var value = target.val();
+                if (value == null || value == '') return false;
+                var assetId = $('input[name=Id]').val();
+                var quizId = target.data('id');
+                $.ajax({
+                    url: `/asset/${assetId}/quiz/${quizId}`,
+                    method: 'put',
+                    data: { value: value },
+                    success: function (e) {
+                        
+                    },
+                    error: function (e) {
+                        alert('Erro ao salvar valor');
+                    }
+                });
+            }
+
+            function addOption(event) {
+                var assetId = $('input[name=Id]').val();
+                var questionId = $(event.currentTarget).data('id');
+                $.ajax({
+                    url: `/asset/${assetId}/question/${questionId}/option`,
+                    method: 'put',
+                    success: function (e) {
+                        var option_template = $('#tmpl-option').html();
+                        var handlebars = Handlebars.compile(option_template);
+                        $(`#options-${questionId}`).append(handlebars(e.result));
+
+                        $(`input[data-id=${e.result.id}]`).on('blur', saveQuiz);
+                        $(`button[data-id=${e.result.id}]`).on('click', removeOption);
+                    },
+                    error: function (e) {
+                        alert('Erro ao incluir opção de pergunta.');
+                    }
+
+                });
+            }
+        </script>
+    }
+    else if (Brenda.Core.Identifiers.Actions.IsRedirect(Model.ActionId ?? Guid.Empty))
+    {
+
+    }
+    else if (Brenda.Core.Identifiers.Actions.IsChallenge(Model.ActionId ?? Guid.Empty))
+    {
+
+    }
+
+
+
+}

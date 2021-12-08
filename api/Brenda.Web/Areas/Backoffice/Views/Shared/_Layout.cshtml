@@ -1,0 +1,245 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+    <title>Brenda Backoffice</title>
+
+    <link rel="shortcut icon" href="~/backoffice/assets/media/favicons/favicon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="~/backoffice/assets/media/favicons/favicon-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="~/backoffice/assets/media/favicons/apple-touch-icon-180x180.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" id="css-main" href="~/backoffice/assets/css/oneui.min.css">
+</head>
+<body>
+    <div id="page-container" class="page-header-dark main-content-boxed">
+        <header id="page-header">
+            <div class="content-header">
+                <div class="d-flex align-items-center">
+                    <a class="font-w600 font-size-h5 tracking-wider text-dual mr-3" href="index.html">
+                        Backoffice <span class="font-w400">Brenda</span>
+                    </a>
+                </div>
+                <!-- END Left Section -->
+                <!-- Right Section -->
+                <div class="d-flex align-items-center">
+                    <button type="button" class="btn btn-sm btn-dual d-md-none" data-toggle="layout" data-action="header_search_on">
+                        <i class="fa fa-fw fa-search"></i>
+                    </button>
+                    <form class="d-none d-md-inline-block" asp-action="search" method="POST">
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control form-control-alt" placeholder="Pesquisar.." id="page-header-search-input2" name="page-header-search-input2">
+                            <div class="input-group-append">
+                                <span class="input-group-text bg-body border-0">
+                                    <i class="fa fa-fw fa-search"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- User Dropdown -->
+                    <div class="dropdown d-inline-block ml-2">
+                        <button type="button" class="btn btn-sm btn-dual" id="page-header-user-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img class="rounded" src="~/backoffice/assets/media/avatars/avatar10.jpg" alt="Header Avatar" style="width: 21px;">
+                            <span class="d-none d-sm-inline-block ml-1">@User.Identity.Name</span>
+                            <i class="fa fa-fw fa-angle-down d-none d-sm-inline-block"></i>
+                        </button>
+                        
+                    </div>
+                    <!-- END User Dropdown -->
+                </div>
+                <!-- END Right Section -->
+            </div>
+            <div id="page-header-search" class="overlay-header bg-white">
+                <div class="content-header">
+                    <form class="w-100" action="bd_search.html" method="POST">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <!-- Layout API, functionality initialized in Template._uiApiLayout() -->
+                                <button type="button" class="btn btn-alt-danger" data-toggle="layout" data-action="header_search_off">
+                                    <i class="fa fa-fw fa-times-circle"></i>
+                                </button>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Search or hit ESC.." id="page-header-search-input" name="page-header-search-input">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div id="page-header-loader" class="overlay-header bg-primary-lighter">
+                <div class="content-header">
+                    <div class="w-100 text-center">
+                        <i class="fa fa-fw fa-circle-notch fa-spin text-primary"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main id="main-container">
+            <div class="bg-white">
+                <div class="content py-3">
+                    <!-- Toggle Main Navigation -->
+                    <div class="d-lg-none">
+                        <!-- Class Toggle, functionality initialized in Helpers.coreToggleClass() -->
+                        <button type="button" class="btn btn-block btn-alt-secondary d-flex justify-content-between align-items-center" data-toggle="class-toggle" data-target="#main-navigation" data-class="d-none">
+                            Menu
+                            <i class="fa fa-bars"></i>
+                        </button>
+                    </div>
+                    <!-- END Toggle Main Navigation -->
+                    <!-- Main Navigation -->
+                    <div id="main-navigation" class="d-none d-lg-block mt-2 mt-lg-0">
+                        <ul class="nav-main nav-main-horizontal nav-main-hover">
+                            <li class="nav-main-item">
+                                <a class="nav-main-link active" href="~/backoffice/dashboard">
+                                    <i class="nav-main-link-icon si si-compass"></i>
+                                    <span class="nav-main-link-name">Dashboard</span>
+                                </a>
+                            </li>
+                            <li class="nav-main-heading">Pages</li>
+                            <li class="nav-main-item">
+                                <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
+                                    <i class="nav-main-link-icon si si-puzzle"></i>
+                                    <span class="nav-main-link-name">Variations</span>
+                                </a>
+                                <ul class="nav-main-submenu">
+                                    <li class="nav-main-item">
+                                        <a class="nav-main-link" href="bd_simple_1.html">
+                                            <span class="nav-main-link-name">Simple 1</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-main-item">
+                                        <a class="nav-main-link" href="bd_simple_2.html">
+                                            <span class="nav-main-link-name">Simple 2</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-main-item">
+                                        <a class="nav-main-link" href="bd_image_1.html">
+                                            <span class="nav-main-link-name">Image 1</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-main-item">
+                                        <a class="nav-main-link" href="bd_image_2.html">
+                                            <span class="nav-main-link-name">Image 2</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-main-item">
+                                        <a class="nav-main-link" href="bd_video_1.html">
+                                            <span class="nav-main-link-name">Video 1</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-main-item">
+                                        <a class="nav-main-link" href="bd_video_2.html">
+                                            <span class="nav-main-link-name">Video 2</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-main-item">
+                                        <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
+                                            <span class="nav-main-link-name">More Options</span>
+                                        </a>
+                                        <ul class="nav-main-submenu">
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link" href="javascript:void(0)">
+                                                    <span class="nav-main-link-name">Another Link</span>
+                                                </a>
+                                            </li>
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link" href="javascript:void(0)">
+                                                    <span class="nav-main-link-name">Another Link</span>
+                                                </a>
+                                            </li>
+                                            <li class="nav-main-item">
+                                                <a class="nav-main-link" href="javascript:void(0)">
+                                                    <span class="nav-main-link-name">Another Link</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-main-item">
+                                <a class="nav-main-link" href="bd_search.html">
+                                    <i class="nav-main-link-icon si si-magnifier"></i>
+                                    <span class="nav-main-link-name">Search</span>
+                                </a>
+                            </li>
+                            <li class="nav-main-item">
+                                <a class="nav-main-link" href="be_pages_dashboard.html">
+                                    <i class="nav-main-link-icon si si-action-undo"></i>
+                                    <span class="nav-main-link-name">Go Back</span>
+                                </a>
+                            </li>
+                            <li class="nav-main-heading">Extra</li>
+                            <li class="nav-main-item ml-lg-auto">
+                                <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
+                                    <i class="nav-main-link-icon si si-drop"></i>
+                                    <span class="nav-main-link-name d-lg-none">Themes</span>
+                                </a>
+                                <ul class="nav-main-submenu nav-main-submenu-right">
+                                    <li class="nav-main-item">
+                                        <a class="nav-main-link" data-toggle="theme" data-theme="default" href="#">
+                                            <i class="nav-main-link-icon fa fa-square text-default"></i>
+                                            <span class="nav-main-link-name">Default</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-main-item">
+                                        <a class="nav-main-link" data-toggle="theme" data-theme="~/backoffice/assets/css/themes/amethyst.min.css" href="#">
+                                            <i class="nav-main-link-icon fa fa-square text-amethyst"></i>
+                                            <span class="nav-main-link-name">Amethyst</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-main-item">
+                                        <a class="nav-main-link" data-toggle="theme" data-theme="~/backoffice/assets/css/themes/city.min.css" href="#">
+                                            <i class="nav-main-link-icon fa fa-square text-city"></i>
+                                            <span class="nav-main-link-name">City</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-main-item">
+                                        <a class="nav-main-link" data-toggle="theme" data-theme="~/backoffice/assets/css/themes/flat.min.css" href="#">
+                                            <i class="nav-main-link-icon fa fa-square text-flat"></i>
+                                            <span class="nav-main-link-name">Flat</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-main-item">
+                                        <a class="nav-main-link" data-toggle="theme" data-theme="~/backoffice/assets/css/themes/modern.min.css" href="#">
+                                            <i class="nav-main-link-icon fa fa-square text-modern"></i>
+                                            <span class="nav-main-link-name">Modern</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-main-item">
+                                        <a class="nav-main-link" data-toggle="theme" data-theme="~/backoffice/assets/css/themes/smooth.min.css" href="#">
+                                            <i class="nav-main-link-icon fa fa-square text-smooth"></i>
+                                            <span class="nav-main-link-name">Smooth</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- END Main Navigation -->
+                </div>
+            </div>
+            <!-- END Navigation -->
+            <!-- Page Content -->
+            <div class="content">
+                @RenderBody()
+            </div>
+            <!-- END Page Content -->
+        </main>
+        <footer id="page-footer" class="bg-white">
+            <div class="content py-3">
+                <div class="row font-size-sm">
+                    <div class="col-sm-6 order-sm-2 py-1 text-center text-sm-right">
+                        <a class="font-w600" href="https://brendarewards.com" target="_blank">Brenda Rewards</a>
+                    </div>
+                    <div class="col-sm-6 order-sm-1 py-1 text-center text-sm-left">
+                        <a class="font-w600" href="https://brendarewards.com" target="_blank">v0.1</a> &copy; <span data-toggle="year-copy"></span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="~/backoffice/assets/js/oneui.core.min.js"></script>
+    <script src="~/backoffice/assets/js/oneui.app.min.js"></script>
+
+    <script src="~/backoffice/assets/js/pages/be_pages_dashboard_v1.min.js"></script>
+</body>
+</html>

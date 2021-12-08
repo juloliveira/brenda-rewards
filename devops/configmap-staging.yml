@@ -1,0 +1,9 @@
+apiVersion: v1
+data:
+  DEPLOY_ENV: Staging
+  PASS_SALT: æ
+  SIGNER_KEY: R2R6DRiMK3YzmvOTioQ3
+kind: ConfigMap
+metadata:
+  name: brenda-test-configmap
+  namespace: staging

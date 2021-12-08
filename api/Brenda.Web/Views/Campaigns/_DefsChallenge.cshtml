@@ -1,0 +1,52 @@
+﻿@model CampaignViewModel
+
+<div class="card card-custom gutter-b example example-compact">
+    
+    <div class="card-header">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="flaticon2-start-up text-primary"></i>
+            </span>
+            <h3 class="card-title">Campanhas</h3>
+        </div>
+        <div class="card-toolbar">
+            <button class="btn btn-primary mr-2" data-toggle="modal" data-target="#modal_campaigns">
+                <i class="fa la-check icon-xs"></i>
+                Selecionar Campanhas
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        @if (!Model.Campaigns.Any())
+        {
+            <div class="form-group row">
+                <label>Nenhuma <strong>Campanha</strong> foi adicionada nesta Campanha de Challenge.</label>
+                <small>Campanhas do tipo Challnge precisam de campanhas de video, quiz ou redirecionamento.</small>
+            </div>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Ação</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (CampaignViewModel item in Model.Campaigns)
+                    {
+                        <tr>
+                            <td>@item.Title</td>
+                            <td>@item.ActionName</td>
+                            <td></td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+        }
+    </div>
+</div>

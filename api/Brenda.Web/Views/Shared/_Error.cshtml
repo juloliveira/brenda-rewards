@@ -1,0 +1,25 @@
+﻿@if (!string.IsNullOrEmpty(TempData["Error"] as string))
+{
+    <div class="alert alert-custom alert-danger fade show" role="alert">
+        <div class="alert-icon"><i class="flaticon-warning"></i></div>
+        <div class="alert-text">@Html.Raw(TempData["Error"])</div>
+        <div class="alert-close">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true"><i class="ki ki-close"></i></span>
+            </button>
+        </div>
+    </div>
+}
+else if (!string.IsNullOrEmpty(TempData["Message"] as string))
+{
+    <div class="alert alert-custom alert-info fade show" role="alert">
+        <div class="alert-icon"><i class="flaticon-warning"></i></div>
+        <div class="alert-text">@Html.Raw(TempData["Message"])</div>
+        <div class="alert-close">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true"><i class="ki ki-close"></i></span>
+            </button>
+        </div>
+    </div>
+}
+

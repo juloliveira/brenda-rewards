@@ -1,0 +1,143 @@
+﻿@model SigninPost
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href="../../../">
+    <meta charset="utf-8" />
+    <title>Brenda Rewards - Plataforma de Recompensas</title>
+    <meta name="description" content="Brenda Rewards - Plataforma de Recompensas" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="canonical" href="https://brendarewards.com" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+    <link href="~/assets/css/pages/login/login-2.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/plugins/custom/prismjs/prismjs.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+    <link rel="shortcut icon" href="~/favicon.ico" />
+</head>
+<body id="kt_body" class="header-fixed header-mobile-fixed subheader-enabled page-loading">
+    <div class="d-flex flex-column flex-root">
+        <div class="login login-2 login-signin-on d-flex flex-column flex-lg-row flex-column-fluid bg-white" id="kt_login">
+            <div class="login-aside order-2 order-lg-1 d-flex flex-row-auto position-relative overflow-hidden">
+                <div class="d-flex flex-column-fluid flex-column justify-content-between py-9 px-7 py-lg-13 px-lg-35">
+                    <a href="https://brendarewards.com" class="text-center pt-2">
+                        <img src="~/assets/media/logos/logo.png" alt="" />
+                    </a>
+                    <div class="d-flex flex-column-fluid flex-column flex-center">
+                        <div class="login-form login-signin py-11">
+                            <form asp-action="sign-in" asp-controller="security" class="form" novalidate="novalidate" id="kt_login_signin_form">
+                                <div class="text-center pb-8">
+                                    <h2 class="font-weight-bolder text-dark font-size-h2 font-size-h1-lg">Faça login</h2>
+                                    <span class="text-muted font-weight-bold font-size-h4">
+                                        ou
+                                        <a href="javascript:;" class="text-primary font-weight-bolder" id="kt_login_signup">Crie sua Conta</a>
+                                    </span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="font-size-h6 font-weight-bolder text-dark">E-mail</label>
+                                    <input asp-for="Username" class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" type="text" placeholder="Entre com seu e-mail" name="username" autocomplete="off" />
+                                </div>
+                                <div class="form-group">
+                                    <div class="d-flex justify-content-between mt-n5">
+                                        <label class="font-size-h6 font-weight-bolder text-dark pt-5">Senha</label>
+                                        <a href="javascript:;" class="text-primary font-size-h6 font-weight-bolder text-hover-primary pt-5" id="kt_login_forgot">Esqueceu sua senha?</a>
+                                    </div>
+                                    <input asp-for="Password" class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" placeholder="Entre com sua senha" type="password" name="password" autocomplete="off" />
+                                </div>
+                                <div class="text-center pt-2">
+                                    <button id="kt_login_signin_submit" class="btn btn-dark font-weight-bolder font-size-h6 px-8 py-4 my-3">Entrar</button>
+                                    <input name="ReturnUrl" type="hidden" value="@Context.Request.Query["returnUrl"]" />
+                                </div>
+                            </form>
+                        </div>
+                        <div class="login-form login-signup pt-11">
+                            <form asp-controller="security" asp-action="sign-up" method="post" class="form" novalidate="novalidate" id="kt_login_signup_form">
+                                <div class="text-center pb-8">
+                                    <h2 class="font-weight-bolder text-dark font-size-h2 font-size-h1-lg">Criar Minha Conta</h2>
+                                    <p class="text-muted font-weight-bold font-size-h4">Preencha os campos abaixo para criar sua conta</p>
+                                </div>
+                                <div class="form-group">
+                                    <input name="companyname" class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="text" placeholder="Digite o Nome da Empresa" autocomplete="off" />
+                                </div>
+                                <div class="form-group">
+                                    <input name="companydocument" class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="text" placeholder="Digite o CNPJ da Empresa" autocomplete="off" />
+                                </div>
+                                <div class="form-group">
+                                    <input name="name" class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="text" placeholder="Digite seu Nome" autocomplete="off" />
+                                </div>
+                                <div class="form-group">
+                                    <input name="email" class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="email" placeholder="Seu E-mail" autocomplete="off" />
+                                </div>
+                                <div class="form-group">
+                                    <input name="password" class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="password" placeholder="Senha" autocomplete="off" />
+                                </div>
+                                <div class="form-group">
+                                    <input name="confirmpassword" class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="password" placeholder="Confirme sua Senha" autocomplete="off" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="checkbox mb-0">
+                                        <input type="checkbox" name="agree" />Eu concordo com os&nbsp;<a href="#">termos e condições de uso</a>.&nbsp;<span></span>
+                                    </label>
+                                </div>
+
+                                <div class="form-group d-flex flex-wrap flex-center pb-lg-0 pb-3">
+                                    <button type="button" id="kt_login_signup_submit" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mx-4">Enviar</button>
+                                    <button type="button" id="kt_login_signup_cancel" class="btn btn-light-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mx-4">Cancelar</button>
+                                    @Html.AntiForgeryToken()
+                                </div>
+                            </form>
+                        </div>
+                        <div class="login-form login-forgot pt-11">
+                            <form class="form" novalidate="novalidate" id="kt_login_forgot_form">
+                                <div class="text-center pb-8">
+                                    <h2 class="font-weight-bolder text-dark font-size-h2 font-size-h1-lg">Esqueceu sua senha?</h2>
+                                    <p class="text-muted font-weight-bold font-size-h4">Entre com seu email</p>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="email" placeholder="Email" name="email" autocomplete="off" />
+                                </div>
+                                <div class="form-group d-flex flex-wrap flex-center pb-lg-0 pb-3">
+                                    <button type="button" id="kt_login_forgot_submit" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mx-4">Enviar</button>
+                                    <button type="button" id="kt_login_forgot_cancel" class="btn btn-light-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mx-4">Cancelar</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="login-form login-created pt-11">
+                            <form class="form" id="kt_login_created_form">
+                                <h1>Bem-vindo!</h1>
+
+                                <p><strong>Sua conta foi criada com sucesso.</strong></p>
+
+                                <p>Enviamos um email de ativação para você.</p>
+                                <p>Acesse agora seu email para ativar sua conta e começar a utilizar todos os benefícios e vantages da plataforma Brenda Rewards.</p>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content order-1 order-lg-2 d-flex flex-column w-100 pb-0" style="background-color: #B1DCED;">
+                <div class="d-flex flex-column justify-content-center text-center pt-lg-40 pt-md-5 pt-sm-5 px-lg-0 pt-5 px-7">
+                    <h3 class="display4 font-weight-bolder my-7 text-dark" style="color: #986923;">Brenda Rewards</h3>
+                    <p class="font-weight-bolder font-size-h2-md font-size-lg text-dark opacity-70">
+                        Única e Inovadora Experiência de Ativação para Campanhas Publicitárias
+                        <br />Uma Nova Maneira de Engajamento
+                    </p>
+                </div>
+                <div class="content-img d-flex flex-row-fluid bgi-no-repeat bgi-position-y-bottom bgi-position-x-center" style="background-image: url(assets/media/svg/illustrations/login-visual-2.svg);"></div>
+            </div>
+        </div>
+
+    </div>
+    <script>var HOST_URL = "https://preview.keenthemes.com/metronic/theme/html/tools/preview";</script>
+    <script>var KTAppSettings = { "breakpoints": { "sm": 576, "md": 768, "lg": 992, "xl": 1200, "xxl": 1200 }, "colors": { "theme": { "base": { "white": "#ffffff", "primary": "#6993FF", "secondary": "#E5EAEE", "success": "#1BC5BD", "info": "#8950FC", "warning": "#FFA800", "danger": "#F64E60", "light": "#F3F6F9", "dark": "#212121" }, "light": { "white": "#ffffff", "primary": "#E1E9FF", "secondary": "#ECF0F3", "success": "#C9F7F5", "info": "#EEE5FF", "warning": "#FFF4DE", "danger": "#FFE2E5", "light": "#F3F6F9", "dark": "#D6D6E0" }, "inverse": { "white": "#ffffff", "primary": "#ffffff", "secondary": "#212121", "success": "#ffffff", "info": "#ffffff", "warning": "#ffffff", "danger": "#ffffff", "light": "#464E5F", "dark": "#ffffff" } }, "gray": { "gray-100": "#F3F6F9", "gray-200": "#ECF0F3", "gray-300": "#E5EAEE", "gray-400": "#D6D6E0", "gray-500": "#B5B5C3", "gray-600": "#80808F", "gray-700": "#464E5F", "gray-800": "#1B283F", "gray-900": "#212121" } }, "font-family": "Poppins" };</script>
+    <script src="~/assets/plugins/global/plugins.bundle.js"></script>
+    <script src="~/assets/plugins/custom/prismjs/prismjs.bundle.js"></script>
+    <script src="~/assets/js/scripts.bundle.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=6LctLMsZAAAAAGIovAgjvWXdEK-VJkyEb6Sy-d4C"></script>
+    <script src="~/assets/js/pages/custom/login/login-general.js"></script>
+</body>
+</html>

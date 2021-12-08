@@ -1,0 +1,22 @@
+﻿depends_on:
+      - brenda-api
+
+brenda-api:
+    image: "brenda-api"
+    build:
+      context: ./api
+      dockerfile: Brenda.Api/Dockerfile
+    volumes:
+      - /c/docker:/c/docker
+    environment:
+      - ASPNETCORE_URLS=https://+443;http://+80
+      - ASPNETCORE_HTTPS_PORT=443
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=123456
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/c/docker/cert-aspnetcore.pfx
+    ports:
+      - 63679:80
+      - 44301:443
+    depends_on:
+      - julia
+    networks:
+      - brenda-network

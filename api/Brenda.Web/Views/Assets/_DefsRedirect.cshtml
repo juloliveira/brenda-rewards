@@ -1,0 +1,20 @@
+﻿@model Brenda.Contracts.V1.Requests.AssetForm
+
+<div class="card card-custom gutter-b example example-compact">
+    <div class="card-header">
+        <h3 class="card-title">Definições do Asset: @Model.ActionName</h3>
+    </div>
+
+    <form class="form" method="post" action="/asset/@Model.Id/redirect">
+        <div class="card-body">
+            <div class="form-group">
+                <label>URL de Redirecionamento</label>
+                <input type="url" name="url" value="@Model.Resource" class="form-control form-control-solid" placeholder="Entre com a URL que o usuário será redirecionado">
+                @Html.HiddenFor(x => x.Id)
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary mr-2">Salvar</button>
+        </div>
+    </form>
+</div>

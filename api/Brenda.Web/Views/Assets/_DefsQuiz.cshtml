@@ -1,0 +1,90 @@
+﻿@model Brenda.Contracts.V1.Requests.AssetForm
+
+<div class="card card-custom gutter-b example example-compact">
+    <div class="card-header">
+        <h3 class="card-title">@Model.ActionName : Perguntas e Opções</h3>
+        <div class="card-toolbar">
+            <a id="a-add-question" href="javascript:void(0);" class="btn btn-sm btn-primary font-weight-bold">
+                <i class="flaticon2-add"></i>Adicionar Pergunta
+            </a>
+        </div>
+    </div>
+
+    <div class="card-body" id="d-quiz">
+        @foreach (QuizView question in ViewBag.Quiz)
+        {
+        <div class="row mb-5 question" data-id="@question.Id">
+            <div class="input-group" id="d-@question.Id">
+                <input data-id="@question.Id" value="@question.Description" type="text" class="form-control quiz" placeholder="Digite sua pergunta">
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-sm fa-plus-circle"></i>
+                    </button>
+                    <div class="dropdown-menu" style="">
+                        <button data-id="@question.Id" class="dropdown-item b-add-option">Adicionar Opção</button>
+                        
+                        <div role="separator" class="dropdown-divider"></div>
+                        <button data-id="@question.Id" class="dropdown-item b-remove-question">Remover Pergunta</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-11 ml-5" id="options-@question.Id">
+                @foreach (QuizView option in question.Options)
+                {
+                    <div class="row mt-2 option_">
+                        <div class="input-group">
+                            <input data-id="@option.Id" value="@option.Description" type="text" class="form-control quiz" placeholder="Digite uma opção" >
+                            <div class="input-group-append">
+                                <button data-id="@option.Id" class="btn font-weight-bold btn-danger btn-icon b-remove-option">
+                                    <i class="la la-close"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        }
+    </div>
+</div>
+
+<script id="tmpl-question" type="text/template7">
+    <div class="row mb-5 question" data-id="{{id}}">
+        <div class="input-group" id="d-{{id}}">
+            <input data-id="{{id}}" type="text" class="form-control quiz" placeholder="Digite sua pergunta">
+            <div class="input-group-append">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-sm fa-plus-circle"></i>
+                </button>
+                <div class="dropdown-menu" style="">
+                    <button data-id="{{id}}" class="dropdown-item b-add-option">Adicionar Opção</button>
+
+                    <div role="separator" class="dropdown-divider"></div>
+                    <button data-id="{{id}}" class="dropdown-item b-remove-question">Remover Pergunta</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-11 ml-5" id="options-{{id}}">
+
+        </div>
+    </div>
+
+    
+</script>
+
+<script id="tmpl-option" type="text/template7">
+    
+    <div class="row mt-2 option_">
+        <div class="input-group">
+            <input data-id="{{id}}" type="text" class="form-control" placeholder="Digite uma opção" >
+            <div class="input-group-append">
+                <button data-id="{{id}}" class="btn font-weight-bold btn-danger btn-icon b-remove-option">
+                    <i class="la la-close"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</script>
+

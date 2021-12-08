@@ -1,0 +1,14 @@
+﻿@model Brenda.Contracts.V1.Requests.AssetForm
+
+@if (Brenda.Core.Identifiers.Actions.IsVideo(Model.ActionId.Value))
+{
+    <partial name="_DefsVideo" />
+}
+else if (Brenda.Core.Identifiers.Actions.IsRedirect(Model.ActionId.Value))
+{
+    <partial name="_DefsRedirect" />
+}
+else if (Brenda.Core.Identifiers.Actions.IsQuiz(Model.ActionId.Value))
+{
+    <partial name="_DefsQuiz" />
+}

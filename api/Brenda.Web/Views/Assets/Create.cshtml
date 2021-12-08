@@ -1,0 +1,22 @@
+﻿@model Brenda.Contracts.V1.Requests.AssetForm
+
+<div class="row">
+    <div class="col-lg-6 col-md-12">
+        <div class="card card-custom gutter-b example example-compact">
+            <div class="card-header">
+                <h3 class="card-title">Criar Nova Campanha</h3>
+            </div>
+            <form asp-controller="asset" asp-action="create" method="post" class="form" novalidate="novalidate">
+                <partial name="_Form" />
+            </form>
+        </div>
+    </div>
+    <div class="col-lg-6">
+
+    </div>
+</div>
+
+@section scripts {
+
+
+}

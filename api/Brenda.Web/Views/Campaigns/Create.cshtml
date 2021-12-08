@@ -1,0 +1,58 @@
+﻿@model Brenda.Contracts.V1.Requests.CampaignForm
+
+<div class="row">
+    <div class="col-lg-6 col-md-12">
+        <div class="card card-custom gutter-b example example-compact">
+            <div class="card-header">
+                <h3 class="card-title">Criar Nova Campanha</h3>
+            </div>
+            <form asp-controller="campaign" asp-action="create" method="post" class="form" novalidate="novalidate">
+                <partial name="_Form" />
+            </form>
+        </div>
+    </div>
+    <div class="col-lg-6">
+
+    </div>
+</div>
+
+@section scripts {
+
+    <script src="~/assets/plugins/global/bootstrap-datepicker.pt-BR.js"></script>
+    <script>
+        $(function () {
+            var arrows;
+
+            autosize($('textarea'));
+
+            if (KTUtil.isRTL()) {
+                arrows = {
+                    leftArrow: '<i class="la la-angle-right"></i>',
+                    rightArrow: '<i class="la la-angle-left"></i>'
+                }
+            } else {
+                arrows = {
+                    leftArrow: '<i class="la la-angle-left"></i>',
+                    rightArrow: '<i class="la la-angle-right"></i>'
+                }
+            }
+
+            $('#kt_datepicker_5').datepicker({
+                rtl: KTUtil.isRTL(),
+                todayHighlight: true,
+                templates: arrows,
+                language: 'pt-BR',
+                autoclose: true
+            });
+
+            // inline picker
+            $('#kt_datepicker_6').datepicker({
+                rtl: KTUtil.isRTL(),
+                todayHighlight: true,
+                templates: arrows,
+                language: 'pt-BR',
+                autoclose: true
+            });
+        });
+    </script>
+}

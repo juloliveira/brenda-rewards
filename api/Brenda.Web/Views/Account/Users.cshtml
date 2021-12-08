@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Brenda.Core.BrendaUser>
+@{
+    ViewBag.Subtitle = $"Configurações";
+}
+
+@section scripts {
+    <script>
+        $(function () {
+           
+        });
+    </script>
+}
+
+<div class="d-flex flex-row">
+    <div class="flex-row-auto offcanvas-mobile w-300px w-xl-350px" id="kt_profile_aside">
+        <partial name="_Info" />
+    </div>
+    <div class="flex-row-fluid ml-lg-8">
+        <div class="card card-custom">
+            <div class="card-header py-3">
+                <div class="card-title align-items-start flex-column">
+                    <h3 class="card-label font-weight-bolder text-dark">Usuários</h3>
+                    <span class="text-muted font-weight-bold font-size-sm mt-1">Lista de usuários e permissões de acesso</span>
+                </div>
+                <div class="card-toolbar">
+                    <a href="~/account/user/new" class="btn btn-danger mr-2">Adicionar Usuário</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="tab-content pt-5">
+                    <div class="tab-pane active" id="kt_apps_contacts_view_tab_2" role="tabpanel">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>E-mail></th>
+                                    <th>Permissões</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (Brenda.Core.BrendaUser user in Model)
+                                {
+                                    <tr>
+                                        <td><a href="~/account/user/@user.Id/edit">#@user.Id.ToString().Substring(0, 8).ToUpper()</a></td>
+                                        <td>@user.Name</td>
+                                        <td>@user.Email</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

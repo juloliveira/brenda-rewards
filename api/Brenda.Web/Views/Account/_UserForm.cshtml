@@ -1,0 +1,20 @@
+﻿@model UserForm
+
+<div class="form-group row">
+    <label class="col-xl-3 col-lg-3 text-right col-form-label">Nome do Usuário</label>
+    <div class="col-lg-9 col-xl-6">
+        <input asp-for="Name" class="form-control form-control-lg form-control-solid" type="text" placeholder="Nome do Usuário">
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-xl-3 col-lg-3 text-right col-form-label">E-mail</label>
+    <div class="col-lg-9 col-xl-6">
+        <input asp-for="Email" class="form-control form-control-lg form-control-solid" type="text" placeholder="Email do Usuário">
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-xl-3 col-lg-3 text-right col-form-label">Permissão</label>
+    <div class="col-lg-9 col-xl-6">
+        @Html.DropDownList("Role", (SelectList)ViewBag.Roles, "Selecione uma permissão", new { @class = "form-control form-control-solid" })
+    </div>
+</div>

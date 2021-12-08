@@ -1,0 +1,23 @@
+﻿@model Brenda.Contracts.V1.Requests.AssetForm
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-lg-6">
+            <label>Título do Asset:</label>
+            @Html.TextBoxFor(x => x.Title, new { @class = "form-control", placeholder = "Digite o título do asset" })
+        </div>
+        <div class="col-lg-6">
+            <label>Formato do Asset:</label>
+            <select asp-items="ViewBag.Formats" asp-for="ActionId" class="form-control"></select>
+        </div>
+    </div>
+    
+</div>
+<div class="card-footer">
+    <div class="row">
+        <div class="col-lg-12">
+            <input type="submit" class="btn btn-primary mr-2" value="Salvar Asset" />
+            <button type="reset" class="btn btn-secondary">Cancelar</button>
+        </div>
+    </div>
+</div>

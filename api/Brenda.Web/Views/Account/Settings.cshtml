@@ -1,0 +1,131 @@
+﻿@model SettingsPost
+@{
+    ViewBag.Subtitle = $"Configurações";
+}
+
+@section scripts {
+    <script>
+        $(function () {
+            var avatar1 = new KTImageInput('img_brand');
+
+            $('#b-save').click(function () {
+                $('form').submit();
+            });
+        });
+    </script>
+}
+
+<div class="d-flex flex-row">
+    <div class="flex-row-auto offcanvas-mobile w-300px w-xl-350px" id="kt_profile_aside">
+        <partial name="_Info" />
+    </div>
+    <div class="flex-row-fluid ml-lg-8">
+        <div class="card card-custom">
+            <div class="card-header py-3">
+                <div class="card-title align-items-start flex-column">
+                    <h3 class="card-label font-weight-bolder text-dark">Configurações Gerais</h3>
+                    <span class="text-muted font-weight-bold font-size-sm mt-1">Altere as configurações gerais abaixo</span>
+                </div>
+                <div class="card-toolbar">
+                    <button id="b-save" type="reset" class="btn btn-primary mr-2">Salvar Configurações</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="tab-content pt-5">
+                    <div class="tab-pane active" id="kt_apps_contacts_view_tab_2" role="tabpanel">
+                        <form asp-action="settings" asp-controller="account" enctype="multipart/form-data" >
+                            <!--begin::Heading-->
+                            <div class="row">
+                                <div class="col-lg-9 col-xl-6 offset-xl-3">
+                                    <h3 class="font-size-h6 mb-5">Informações da Empresa:</h3>
+                                </div>
+                            </div>
+                            <!--end::Heading-->
+                            <div class="form-group row">
+                                <label class="col-xl-3 col-lg-3 text-right col-form-label">Logomarca</label>
+                                <div class="col-lg-9 col-xl-9">
+                                    <div class="image-input image-input-outline" id="img_brand" style="background-image: url(assets/media/users/brenda_avatar.png)">
+                                        
+                                        <div class="image-input-wrapper" style="background-image: url(@Model.SettingsLogoAvatar)"></div>
+                                        
+                                        <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="change" data-toggle="tooltip" title="" data-original-title="Change avatar">
+                                            <i class="fa fa-pen icon-sm text-muted"></i>
+                                            <input asp-for="Logo" accept=".png, .jpg, .jpeg" />
+                                            <input type="hidden" name="profile_avatar_remove">
+                                        </label>
+                                        <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="cancel" data-toggle="tooltip" title="" data-original-title="Cancel avatar">
+                                            <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                        </span>
+                                        <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="remove" data-toggle="tooltip" title="" data-original-title="Remove avatar">
+                                            <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                        </span>
+                                    </div>
+                                    <span class="form-text text-muted">A imagem deve ter 1920x1920 pixels.</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-xl-3 col-lg-3 text-right col-form-label">Nome da Empresa</label>
+                                <div class="col-lg-9 col-xl-6">
+                                    <input asp-for="Name" class="form-control form-control-lg form-control-solid" type="text" placeholder="Nome da Empresa">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-xl-3 col-lg-3 text-right col-form-label">Descrição</label>
+                                <div class="col-lg-9 col-xl-6">
+                                    <textarea asp-for="SettingsDescription" class="form-control form-control-lg form-control-solid" rows="4"></textarea>
+                                    <span class="form-text text-muted">Descreva neste campo informações sobre a empresa.</span>
+                                </div>
+                            </div>
+                            <div class="separator separator-dashed my-10"></div>
+                            <!--begin::Heading-->
+                            <div class="row">
+                                <div class="col-lg-9 col-xl-6 offset-xl-3">
+                                    <h3 class="font-size-h6 mb-5">Informações de Contato:</h3>
+                                </div>
+                            </div>
+                            <!--end::Heading-->
+                            <div class="form-group row">
+                                <label class="col-xl-3 col-lg-3 text-right col-form-label">Telefone</label>
+                                <div class="col-lg-9 col-xl-6">
+                                    <div class="input-group input-group-lg input-group-solid">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="la la-phone"></i>
+                                            </span>
+                                        </div>
+                                        <input asp-for="SettingsPhoneNumber" type="text" class="form-control form-control-lg form-control-solid" placeholder="Entre com o Telefone do SAC">
+                                    </div>
+                                    <span class="form-text text-muted">Este número pode ser configurado para que os usuários da plataforma possam entrar em contato com sua empresa.</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-xl-3 col-lg-3 text-right col-form-label">E-mail</label>
+                                <div class="col-lg-9 col-xl-6">
+                                    <div class="input-group input-group-lg input-group-solid">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="la la-at"></i>
+                                            </span>
+                                        </div>
+                                        <input asp-for="SettingsEmail" type="text" class="form-control form-control-lg form-control-solid" placeholder="Entre com o e-mail de SAC">
+                                        @Html.ValidationMessageFor(x => x.SettingsEmail)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-xl-3 col-lg-3 text-right col-form-label">Site</label>
+                                <div class="col-lg-9 col-xl-6">
+                                    <div class="input-group input-group-lg input-group-solid">
+                                        <input asp-for="SettingsSite" type="text" class="form-control form-control-lg form-control-solid" placeholder="Entre com a URL do site da empresa">
+                                        @Html.ValidationMessageFor(x => x.SettingsSite)
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

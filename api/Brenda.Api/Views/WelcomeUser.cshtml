@@ -1,0 +1,16 @@
+﻿@model Brenda.Contracts.Emails.WelcomeUser
+
+<html>
+<head>
+    <title>Bem-vindo à Brenda Rewards</title>
+</head>
+<body>
+    <h1>Olá @Model.Name</h1>
+    <p>Este é o e-mail de boas vindas da plataforma <storng>Brenda Rewards</storng>!</p>
+    <p>Agora precisamos confirmar seu email de cadastro para que você tenha acesso a todos os recursos da plataforma <strong>Brenda Rewards</strong>.</p>
+    <p>Confirme seu cadastro <a href="@Model.ConfirmEmailLink">clicando aqui</a>.</p>
+
+    <p>Se o link não funcionar copie e cole no seu navegador o seguinte endereço <a href="@Model.ConfirmEmailLink">@Model.ConfirmEmailLink</a></p>
+
+</body>
+</html>

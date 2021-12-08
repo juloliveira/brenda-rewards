@@ -1,0 +1,38 @@
+﻿@model CampaignViewModel
+
+<div class="card card-custom gutter-b example example-compact">
+    <div class="card-header">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="flaticon2-start-up text-primary"></i>
+            </span>
+            <h3 class="card-title">Ação de Redirecionamento</h3>
+        </div>
+        <div class="card-toolbar">
+            <button class="btn btn-primary mr-2" data-toggle="modal" data-target="#modal_assets">
+                <i class="fa la-check icon-xs"></i>
+                Selecionar Asset de Redirecionamento
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        @if (!Model.AssetId.HasValue)
+        {
+            <div class="form-group row">
+                <label>Nenhum <strong>asset de redirecionamento</strong> foi selecionado para essa campanha.</label>
+                <small>Os asseets são os conteúdos apresentados para os usuários que ativam as campanhas através de QRCode.</small>
+            </div>
+        }
+        
+        else 
+        {
+            <div class="form-group row">
+                <label><strong>URL de Redirecionamento</strong> .</label>
+                <small>O conteúdo da URL abaixo será apresentado para o usuário quando ele ativar esta campanha.</small>
+                <br />
+                <p><a href="@Model.AssetResource" target="_blank">@Model.AssetResource</a></p>
+            </div>
+        }
+        
+    </div>
+</div>

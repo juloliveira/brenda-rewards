@@ -1,0 +1,675 @@
+﻿@model CampaignViewModel
+@{
+    ViewBag.Subtitle = Html.Raw(Model.Title);
+}
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card card-custom gutter-b">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-icon">
+                                <i class="flaticon-edit-1 text-primary"></i>
+                            </span>
+                            <h3 class="card-title">Editar Campanha: #@Html.Raw(ViewBag.Tag)</h3>
+                        </div>
+
+                    </div>
+                    <form asp-controller="campaign" asp-action="edit" method="post" class="form" novalidate="novalidate">
+                        @Html.HiddenFor(x => x.Id)
+                        <partial name="_Form" />
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <partial name="@($"_Defs{Brenda.Core.Identifiers.Actions.NameOf(Model.ActionId)}")" />
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        @if (Model.DefinitionsValidateGeoLocation)
+        {
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-custom">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span class="card-icon">
+                                    <i class="flaticon2-pin text-primary"></i>
+                                </span>
+                                <h3 class="card-title">Permissões de Geolocalização</h3>
+                            </div>
+
+                        </div>
+
+                        <div class="card-body">
+                            <div id="map"></div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-lg-12 mt-10">
+                    <div class="card card-custom">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span class="card-icon">
+                                    <i class="flaticon2-digital-marketing text-primary"></i>
+                                </span>
+                                <h3 class="card-title">URL's de Ativação</h3>
+
+                            </div>
+                            <div class="card-toolbar">
+                                <a id="a-add-url" href="javascript:void(0);" class="btn btn-sm btn-primary font-weight-bold">
+                                    <i class="flaticon2-add"></i>Adicionar URL
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <div id="d-urls">
+                                @foreach (UrlActionViewModel urlAction in Model.UrlActions)
+                                {
+                                    <div class="row mb-5 url" data-id="@urlAction.Id">
+                                        <div class="input-group" id="d-@urlAction.Id">
+                                            <input data-id="@urlAction.Id" value="@urlAction.Url" type="text" class="form-control url" placeholder="URL de ativação">
+                                            <div class="input-group-append">
+                                                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-sm fa-minus-circle"></i>
+                                                </button>
+                                                <div class="dropdown-menu" style="">
+                                                    <div role="separator" class="dropdown-divider"></div>
+                                                    <button data-id="@urlAction.Id" class="dropdown-item b-remove-url">Remover URL</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    @Html.HiddenFor(x => x.Id)
+</div>
+
+<div class="modal fade" id="modal_assets" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Pesquisa de Asset</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-7">
+                        <form id="form-assets" class="form">
+                            <div class="form-group" style="margin-bottom: 10px !important;">
+                                <div class="input-icon">
+                                    <input name="i-search-asset" type="text" class="form-control form-control-sm" placeholder="Pesquisar...">
+                                    <input name="i-campaign-action" type="hidden" value="@Model.ActionTag" />
+                                    <span><i class="flaticon2-search-1 icon-md"></i></span>
+                                </div>
+                            </div>
+                        </form>
+                        <table class="table table-dark table-sm rounded " id="t-assets">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Título</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">Pesquise por assets cadastrados.</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                        <small>Resultados limitados a 30 registros.</small>
+                    </div>
+                    <div class="col-lg-5">
+                        <video id="player"
+                               controls
+                               preload="auto"
+                               width="300">
+                            <p class="vjs-no-js">
+                                <a href="https://videojs.com/html5-video-support/" target="_blank"></a>
+                            </p>
+                        </video>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_campaigns" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Pesquisa de Campanhas</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-7">
+                        <form id="form-campaigns" class="form">
+                            <div class="form-group" style="margin-bottom: 10px !important;">
+                                <div class="input-icon">
+                                    <input name="i-search-campaign" type="text" class="form-control form-control-sm" placeholder="Pesquisar campanha por título...">
+                                    <span><i class="flaticon2-search-1 icon-md"></i></span>
+                                </div>
+                            </div>
+                        </form>
+                        <table class="table table-dark table-sm rounded" id="t-campaigns">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Título</th>
+                                    <th>Ação</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">Pesquise por campanhas ainda não publicadas.</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                        <small>Resultados limitados a 30 registros.</small>
+                    </div>
+                    <div class="col-lg-5">
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="template-asset" type="text/template7">
+    {{#if result.length}}
+    {{#each result}}
+    <tr>
+        <td class="text-uppercase">{{substring id 0 8}}</td>
+        <td>
+            {{title}}
+        </td>
+        <td class="text-center">
+            <a href="javascript:play('{{resource}}');" class="btn btn-icon btn-xs btn-hover-text-warning active" data-toggle="tooltip" data-placement="left" title="" data-original-title="Ver Video">
+                <i class="fas fa-film text-muted"></i>
+            </a>
+            <a href="javascript:void(0)" class="btn btn-icon btn-xs btn-hover-text-warning active asset-select" data-id="{{id}}" data-toggle="tooltip" data-placement="left" title="" data-original-title="Selecionar Asset">
+                <i class="far fa-check-circle text-muted"></i>
+            </a>
+        </td>
+    </tr>
+    {{/each}}
+    {{else}}
+    <tr><td colspan="3">A pesquisa não encontrou resultados.</td></tr>
+    {{/if}}
+</script>
+
+<script id="template-campaign" type="text/template7">
+    {{#if result.length}}
+        {{#each result}}
+    <tr>
+        <td class="text-uppercase">{{substring id 0 8}}</td>
+        <td>{{title}}</td>
+        <td>{{action}}</td>
+        <td class="text-center">
+            <a href="javascript:;" class="btn btn-icon btn-xs btn-hover-text-warning active" data-toggle="tooltip" data-placement="left" title="" data-original-title="Ver Campanha">
+                <i class="fas fa-film text-muted"></i>
+            </a>
+            <a href="javascript:void(0)" class="btn btn-icon btn-xs btn-hover-text-warning active b-select-campaign" data-id="{{id}}" data-toggle="tooltip" data-placement="left" title="" data-original-title="Selecionar Campanha">
+                <i class="far fa-check-circle text-muted"></i>
+            </a>
+        </td>
+    </tr>
+        {{/each}}
+    {{else}}
+        <tr><td colspan="4">A pesquisa não encontrou resultados.</td></tr>
+    {{/if}}
+</script>
+
+<script id="tmpl-url" type="text/template7">
+    <div class="row mb-5 url" data-id="{{id}}">
+        <div class="input-group" id="d-{{id}}">
+            <input data-id="{{id}}" type="text" class="form-control url" placeholder="URL de ativação">
+            <div class="input-group-append">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-sm fa-minus-circle"></i>
+                </button>
+                <div class="dropdown-menu" style="">
+                    <div role="separator" class="dropdown-divider"></div>
+                    <button data-id="{{id}}" class="dropdown-item b-remove-url">Remover URL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+@section head {
+    <link href="~/assets/plugins/custom/plyr/plyr.css" rel="stylesheet" />
+    <style>
+        #map {
+            height: 600px;
+        }
+    </style>
+}
+
+@section scripts {
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADfmMJDzYe0efJj0tVE67gIhLiZz5Tqys&callback=initMap">
+    </script>
+
+    <script src="~/assets/plugins/global/bootstrap-datepicker.pt-BR.js"></script>
+
+    @if (Brenda.Core.Identifiers.Actions.IsVideo(Model.ActionId))
+    {
+        <script src="~/assets/plugins/custom/plyr/plyr.min.js"></script>
+    }
+
+    <script>
+        var player = null;
+
+        (function (exports) {
+            "use strict";
+
+            @if (Brenda.Core.Identifiers.Actions.IsVideo(Model.ActionId))
+            {
+                <text>
+            var campaignPlayer = new Plyr('#campaign-player', { debug: true, controls: ['play-large', 'fullscreen'] })
+                </text>
+            }
+
+
+            autosize($('textarea'));
+            var arrows;
+
+            if (KTUtil.isRTL()) {
+                arrows = {
+                    leftArrow: '<i class="la la-angle-right"></i>',
+                    rightArrow: '<i class="la la-angle-left"></i>'
+                }
+            } else {
+                arrows = {
+                    leftArrow: '<i class="la la-angle-left"></i>',
+                    rightArrow: '<i class="la la-angle-right"></i>'
+                }
+            }
+
+            $('#DefinitionsValidationStart').datepicker({
+                rtl: KTUtil.isRTL(),
+                todayHighlight: true,
+                templates: arrows,
+                language: 'pt-BR',
+                autoclose: true
+            });
+
+            // inline picker
+            $('#DefinitionsValidationEnd').datepicker({
+                rtl: KTUtil.isRTL(),
+                todayHighlight: true,
+                templates: arrows,
+                language: 'pt-BR',
+                autoclose: true
+            });
+
+            function initMap() {
+                exports.map = new google.maps.Map(document.getElementById("map"), {
+                    center: {
+                        lat: -18.397,
+                        lng: -49.644
+                    },
+                    zoom: 4
+                });
+
+                google.maps.event.addListener(exports.map, "rightclick", addRestriction);
+
+                $.get('/campaigns/restriction/' + document.getElementById("Id").value, function (result) {
+                    $(result).each(function (idx, item) {
+                        addOnMap(item.id, item.lat, item.lng, item.radius)
+                    });
+                });
+            }
+
+            function addRestriction(event) {
+                var restriction = {
+                    id: document.getElementById("Id").value,
+                    lat: event.latLng.lat().toString().replace('.', ','),
+                    lng: event.latLng.lng().toString().replace('.', ','),
+                    radius: 40000
+                };
+
+                $.ajax({
+                    url: '/campaign/restriction',
+                    method: 'POST',
+                    data: restriction,
+                    success: function (e) {
+                        addOnMap(e.result.id, event.latLng.lat(), event.latLng.lng(), restriction.radius);
+                    },
+                    error: function () {
+                        alert('Erro!');
+                    }
+                });
+            }
+
+            function updateRestriction(id, lat, lng, radius) {
+                $.ajax({
+                    url: '/campaign/restriction',
+                    method: 'PUT',
+                    data: { id: id, lat: lat, lng: lng, radius: parseInt(radius) },
+                    success: function (e) {
+                        //addOnMap(e.result.id, event.latLng.lat(), event.latLng.lng(), restriction.radius);
+                    },
+                    error: function () {
+                        alert('Erro!');
+                    }
+                });
+            }
+
+            function deleteRestriction(restriction) {
+                $.ajax({
+                    url: '/campaign/restriction',
+                    method: 'DELETE',
+                    data: { id: restriction.id },
+                    success: function (e) {
+                        restriction.setMap(null);
+                    },
+                    error: function () {
+                        alert('Erro!');
+                    }
+                });
+            }
+
+            function addOnMap(id, lat, lng, radius) {
+                var circle = new google.maps.Circle({
+                    id: id,
+                    map: exports.map,
+                    radius: radius, // in metres
+                    fillColor: '#AA0000',
+                    draggable: true,
+                    center: event.latLng,
+                    center: new google.maps.LatLng(lat, lng),
+                    strokeColor: "#FF0000",
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: "#FF0000",
+                    fillOpacity: 0.35,
+                    editable: true
+                });
+
+                google.maps.event.addListener(circle, "dragend", function (event) {
+                    updateRestriction(circle.id, circle.center.lat().toString().replace('.', ','), circle.center.lng().toString().replace('.', ','), circle.radius)
+                });
+
+                circle.addListener('radius_changed', function (e) {
+                    updateRestriction(this.id, this.center.lat().toString().replace('.', ','), this.center.lng().toString().replace('.', ','), this.radius)
+                });
+
+                circle.addListener('rightclick', function (e) {
+                    deleteRestriction(this);
+                });
+
+
+            }
+
+            exports.initMap = initMap;
+
+            Handlebars.registerHelper('substring', function (passedString, startstring, endstring) {
+                var theString = passedString.substring(startstring, endstring);
+                return new Handlebars.SafeString(theString)
+            });
+
+            var tmplAsset = $('#template-asset').html();
+            var assetItem = Handlebars.compile(tmplAsset);
+
+            var tmplCampaign = $('#template-campaign').html();
+            var campaignItem = Handlebars.compile(tmplCampaign);
+
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-top-center",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+
+            $('#form-assets').on('shown.bs.modal', function (event) {
+                player = ctorPlyr();
+                $('#form-assets input').focus();
+            });
+
+            $('#form-assets').on('hide.bs.modal', function () {
+                player.destroy();
+                player = null;
+            })
+
+            $('#form-assets').submit(function (e) {
+                e.preventDefault();
+                var search = $(this).find('input[name=i-search-asset]').val();
+                var actionTag = $(this).find('input[name=i-campaign-action]').val();
+                if (search.trim().length < 3) {
+                    toastr.warning("Pesquisas devem ter no mínimo 3 letras.");
+                    return false;
+                }
+
+                KTApp.block('#form-assets .modal-content', {
+                    overlayColor: 'black',
+                    opacity: 0.1,
+                    state: 'primary' // a bootstrap color
+                });
+
+                $.ajax({
+                    method: 'get',
+                    url: '/assets/search',
+                    data: { q: search, actionTag: actionTag },
+                    success: function (e) {
+                        $('#t-assets tbody').html(assetItem(e));
+                        $('[data-toggle="tooltip"]').tooltip();
+                        KTApp.unblock('#form-assets .modal-content');
+
+                        $('.asset-select').on('click', setAsset);
+                    },
+                    error: function (e) {
+                        KTApp.unblock('#form-assets .modal-content');
+                    }
+                });
+            });
+
+            $('#form-campaigns').on('shown.bs.modal', function (event) {
+                $('#form-campaigns input').focus();
+            });
+
+            $('#form-campaigns').submit(function (e) {
+                e.preventDefault();
+                var search = $(this).find('input[name=i-search-campaign]').val();
+                if (search.trim().length < 3) {
+                    toastr.warning("Pesquisas devem ter no mínimo 3 letras.");
+                    return false;
+                }
+
+                KTApp.block('#form-assets .modal-content', {
+                    overlayColor: 'black',
+                    opacity: 0.1,
+                    state: 'primary' // a bootstrap color
+                });
+
+                $.ajax({
+                    method: 'get',
+                    url: '/campaigns/search',
+                    data: { q: search },
+                    success: function (e) {
+                        console.log(e);
+
+                        $('#t-campaigns tbody').html(campaignItem(e));
+                        $('[data-toggle="tooltip"]').tooltip();
+                        KTApp.unblock('#form-campaigns .modal-content');
+
+                        $('.b-select-campaign').on('click', addCampaign);
+                    },
+                    error: function (e) {
+                        KTApp.unblock('#form-assets .modal-content');
+                    }
+                });
+            });
+        })((this.window = this.window || {}));
+
+        function addCampaign(e) {
+            var campaignId = document.getElementById('Id').value;
+            var campaignSelected = $(event.currentTarget).data('id');
+
+            $.ajax({
+                url: `/challenge/${campaignId}/campaign/${campaignSelected}`,
+                method: 'put',
+                success: function (e) {
+                    location.reload();
+                },
+                error: function (e) {
+                    toastr.error(e.responseJSON.title);
+                }
+            });
+        }
+
+        function setAsset() {
+            var assetId = $(this).data('id');
+            var campaignId = document.getElementById('Id').value;
+
+            $.ajax({
+                method: 'put',
+                url: '/campaign/' + campaignId + '/asset',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify({ id: assetId }),
+                success: function (e) {
+                    location.reload();
+                },
+                error: function (e) {
+                    //alert('ô loko bicho!');
+                }
+            });
+        }
+
+        function ctorPlyr() {
+            if (player != null)
+                player.destroy();
+            return new Plyr('#player', { debug: true, controls: ['play-large', 'fullscreen'] });
+        }
+
+        function play(resource) {
+            player = ctorPlyr();
+
+            player.on('ended', event => {
+                player.destroy();
+            });
+
+            player.source = {
+                type: 'video',
+                sources: [
+                    {
+                        src: resource,
+                        type: 'video/mp4',
+                        size: 720,
+                    }
+                ]
+            };
+
+            player.play();
+        };
+
+
+        $(function () {
+            $('#a-add-url').click(function (e) {
+                var campaignId = $('input[name=Id]').val();
+                $.ajax({
+                    url: `/campaign/${campaignId}/url`,
+                    method: 'put',
+                    success: function (e) {
+                        var question_template = $('#tmpl-url').html()
+                        var handlebars = Handlebars.compile(question_template);
+                        $('#d-urls').append(handlebars(e.result));
+
+                        $(`#d-${e.result.id}`).find('.url').on('blur', saveUrl);
+                    },
+                    error: function (e) {
+                        toastr.error(e.responseJSON.title);
+                    }
+
+                });
+            });
+
+            $('.url').on('blur', saveUrl);
+            $('.b-remove-url').on('click', removeUrl);
+        });
+
+        function saveUrl(event) {
+            var target = $(event.currentTarget);
+            var value = target.val();
+            if (value == null || value == '') return false;
+            var campaignId = $('input[name=Id]').val();
+            var urlId = target.data('id');
+            $.ajax({
+                url: `/campaign/${campaignId}/url/${urlId}/update`,
+                method: 'put',
+                data: { value: value },
+                success: function (e) {
+                    toastr.info("A URL de Ativação foi salva.");
+                },
+                error: function (e) {
+                    toastr.error("Houve um erro ao tentar salvar a URL de Ativação");
+                }
+            });
+        }
+
+        function removeUrl(event) {
+            var target = $(event.currentTarget);
+            var campaignId = $('input[name=Id]').val();
+            var urlActionId = target.data('id');
+            $.ajax({
+                url: `/campaign/${campaignId}/url/${urlActionId}/remove`,
+                method: 'delete',
+                success: function (e) {
+                    toastr.info("URL de Ativação removida com sucesso");
+                    target.parents('.url').remove();
+                },
+                error: function (e) {
+                    toastr.error("Erro ao remover opção de resposta");
+                }
+
+            });
+        }
+    </script>
+}
+

@@ -1,0 +1,43 @@
+﻿@model UserForm
+@{
+    ViewBag.Subtitle = $"Cadastro de Usuário";
+}
+
+@section scripts {
+    <script>
+        $(function () {
+            $('#b-save').click(function (e) {
+                $('#f-user').submit();
+            });
+        });
+    </script>
+}
+
+<div class="d-flex flex-row">
+    <div class="flex-row-auto offcanvas-mobile w-300px w-xl-350px" id="kt_profile_aside">
+        <partial name="_Info" />
+    </div>
+    <div class="flex-row-fluid ml-lg-8">
+        <div class="card card-custom">
+            <div class="card-header py-3">
+                <div class="card-title align-items-start flex-column">
+                    <h3 class="card-label font-weight-bolder text-dark">Cadastro de Usuário</h3>
+                    <span class="text-muted font-weight-bold font-size-sm mt-1">Formulário de cadastro de novos usuários</span>
+                </div>
+                <div class="card-toolbar">
+                    <button id="b-save" type="reset" class="btn btn-primary mr-2">Salvar Usuário</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="tab-content pt-5">
+                    <div class="tab-pane active" id="kt_apps_contacts_view_tab_2" role="tabpanel">
+                        <form asp-action="newuser" asp-controller="account" method="post" id="f-user">
+                            <partial name="_UserForm" />
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
